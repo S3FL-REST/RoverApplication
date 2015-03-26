@@ -73,7 +73,7 @@ void RobotMain::VisionLoop() {
 }
 
 void RobotMain::PeriodicLoop() {
-    QCoreApplication::quit();
+
 }
 
 void RobotMain::NetworkLoop() {
