@@ -46,6 +46,8 @@ private:
 
     Camera frontCam;
 
+    Network2Rover::run_mode runMode;
+
 private slots:
     void MainLoop();
     void VisionLoop();

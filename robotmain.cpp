@@ -2,7 +2,7 @@
 
 RobotMain::RobotMain(QObject *parent) : QObject(parent),
     mainTimer(this), visionTimer(this), periodicTimer(this), networkTimer(this),
-    driveSerialPort("/dev/ttyACM1"), drive(this),
+    driveSerialPort("/dev/ttyACM0"), drive(this),
     networkData(this),
     frontCam(0)
 {
@@ -35,6 +35,8 @@ RobotMain::RobotMain(QObject *parent) : QObject(parent),
     connect(&networkTimer, SIGNAL(timeout()), this, SLOT(NetworkLoop()));
 }
 
+
+// Starts All Run Loops
 void RobotMain::Start() {
     mainTimer.start();
     visionTimer.start();
@@ -44,6 +46,7 @@ void RobotMain::Start() {
     qDebug() << "Staring Main Run Loop";
 }
 
+// Stops All Run Loops
 void RobotMain::Stop() {
     mainTimer.stop();
     visionTimer.stop();
@@ -53,12 +56,18 @@ void RobotMain::Stop() {
     qDebug() << "Stopping Main Run Loop";
 }
 
+// Main Run Loop - Runs once every 5 ms
 void RobotMain::MainLoop() {
-    if (networkData.GetCurrentRunMode() == Network2Rover::STOP) {
+    if (runMode != networkData.GetCurrentRunMode()) {
+        runMode = networkData.GetCurrentRunMode();
+        qDebug() << "New Run Mode: " << runMode;
+    }
+
+    if (runMode == Network2Rover::STOP) {
         drive.SetDriveMotors(0, 0);
     }
 
-    else if (networkData.GetCurrentRunMode() == Network2Rover::TELEOP) {
+    else if (runMode == Network2Rover::TELEOP) {
         int joyL = networkData.GetJoystickLeft();
         int joyR = networkData.GetJoystickRight();
 
@@ -70,11 +79,15 @@ void RobotMain::MainLoop() {
     }
 }
 
+// Vision Loop - Runs once every 50 ms
 void RobotMain::VisionLoop() {
     frontCam.CaptureImage();
 }
 
+// Periodic Loop - Runs once every 1000 ms
 void RobotMain::PeriodicLoop() {
+
+    //Checks temperature and exits program if temperature exceeds critical value
     double currentTemp = TemperatureMonitor::GetTemperature();
 
     //qDebug() << currentTemp;
@@ -85,7 +98,9 @@ void RobotMain::PeriodicLoop() {
     }
 }
 
+// Network Loop - Runs once every 500 ms
 void RobotMain::NetworkLoop() {
+    //Checks for a new image, and sends image if available
     if (frontCam.HasNewImage()) {
         networkData.SetPicture(frontCam.GetCurrentImage());
         networkData.SendDataToBase();
