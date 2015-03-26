@@ -18,12 +18,17 @@ public:
     int GetJoystickRight() const;
     Network2Rover::run_mode GetCurrentRunMode() const;
 
+    void SetPicture(QImage);
+    void SendDataToBase();
+
     ~NetworkDataManager();
 
 private:
     Network2Rover dataIn;
+    Network2Base dataOut;
 
 signals:
+    void SendData(QByteArray);
 
 public slots:
     void ResetToDefaults();

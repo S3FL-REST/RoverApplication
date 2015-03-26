@@ -22,7 +22,10 @@ SOURCES += main.cpp \
     Controls/robotdrive.cpp \
     Protocols/rest_network.cpp \
     Network/networkserver.cpp \
-    Network/networkdatamanager.cpp
+    Network/networkdatamanager.cpp \
+    Computer/temperaturemonitor.cpp \
+    Vision/camera.cpp \
+    Vision/robotvision.cpp
 
 HEADERS += \
     Serial/serialport.h \
@@ -31,4 +34,12 @@ HEADERS += \
     Controls/robotdrive.h \
     Protocols/rest_network.h \
     Network/networkserver.h \
-    Network/networkdatamanager.h
+    Network/networkdatamanager.h \
+    Computer/temperaturemonitor.h \
+    Vision/camera.h \
+    Vision/robotvision.h
+
+unix {
+    CONFIG += link_pkgconfig
+    PKGCONFIG += opencv
+}

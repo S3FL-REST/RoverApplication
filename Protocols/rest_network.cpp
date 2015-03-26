@@ -33,10 +33,12 @@ Network2Rover::run_mode Network2Rover::GetRunMode() const {
 }
 
 QByteArray Network2Rover::ToByteArray() const {
-    return QString("%1:%2:%3\n").arg(QString::number(left_joystick), QString::number(right_joystick), QString::number(static_cast<int>(current_mode))).toUtf8();
+    return QString("%1:%2:%3\n").arg(QString::number(left_joystick),
+                                     QString::number(right_joystick),
+                                     QString::number(static_cast<int>(current_mode))).toUtf8();
 }
 
-bool Network2Rover::ParseData(QByteArray data) {
+bool Network2Rover::ParseData(QByteArray &data) {
     QStringList list = QString(data).split(":");
 
     if (list.size() < NUM_PARAMS) return false;
@@ -52,7 +54,7 @@ bool Network2Rover::ParseData(QByteArray data) {
 /// Network2Base
 ////////////////////////////////////////////////////////////////////////////////
 
-Network2Base::Network2Base() : new_picture(false) {
+Network2Base::Network2Base() {
 
 }
 
@@ -62,10 +64,6 @@ void Network2Base::SetImage(QImage &image_in) {
 
 QImage Network2Base::GetImage() const {
     return image;
-}
-
-bool Network2Base::HasNewImage() const {
-    return new_picture;
 }
 
 QByteArray Network2Base::ToByteArray() const {
@@ -81,13 +79,11 @@ QByteArray Network2Base::ToByteArray() const {
     return byteArray;
 }
 
-bool Network2Base::ParseString(QString data) {
-    QByteArray byteArray = data.toUtf8();
-
-    QBuffer buffer(&byteArray);
+bool Network2Base::ParseData(QByteArray &data) {
+    QBuffer buffer(&data);
     buffer.open(QIODevice::ReadOnly);
 
-    return new_picture = image.load(&buffer, "JPG");
+    return image.load(&buffer, "JPG");
 }
 
 

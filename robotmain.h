@@ -8,6 +8,8 @@
 
 #include <QCoreApplication>
 
+#include "Computer/temperaturemonitor.h"
+
 #include "Serial/serialport.h"
 #include "Controls/robotdrive.h"
 
@@ -15,6 +17,8 @@
 #include "Network/networkdatamanager.h"
 
 #include "Protocols/rest_network.h"
+
+#include "Vision/camera.h"
 
 class RobotMain : public QObject
 {
@@ -39,6 +43,8 @@ private:
     QThread networkThread;
     NetworkServer server;
     NetworkDataManager networkData;
+
+    Camera frontCam;
 
 private slots:
     void MainLoop();

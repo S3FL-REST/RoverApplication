@@ -44,7 +44,10 @@ void NetworkServer::SocketDisconnected() {
 }
 
 void NetworkServer::SendData(QByteArray data) {
+    qDebug() << "Called";
+
     if (IsConnected()) {
+        qDebug() << data;
         socket->write(data);
         socket->flush();
     }

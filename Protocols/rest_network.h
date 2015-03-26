@@ -39,7 +39,7 @@ public:
     run_mode GetRunMode() const;
 
     QByteArray ToByteArray() const;
-    bool ParseData(QByteArray);
+    bool ParseData(QByteArray&);
 
 private:
     int left_joystick;
@@ -55,15 +55,12 @@ public:
     void SetImage(QImage&);
 
     QImage GetImage() const;
-    bool HasNewImage() const;
 
     QByteArray ToByteArray() const;
-    bool ParseString(QString);
+    bool ParseData(QByteArray&);
 
 private:
     QImage image;
-
-    bool new_picture;
 };
 
 #endif // REST_NETWORK_H

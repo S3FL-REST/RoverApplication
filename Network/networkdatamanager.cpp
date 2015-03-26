@@ -28,6 +28,14 @@ void NetworkDataManager::ResetToDefaults() {
     }
 }
 
+void NetworkDataManager::SetPicture(QImage image) {
+    dataOut.SetImage(image);
+}
+
+void NetworkDataManager::SendDataToBase() {
+    emit SendData(dataOut.ToByteArray());
+}
+
 NetworkDataManager::~NetworkDataManager() {
 
 }

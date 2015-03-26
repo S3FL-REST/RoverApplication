@@ -2,8 +2,9 @@
 
 RobotMain::RobotMain(QObject *parent) : QObject(parent),
     mainTimer(this), visionTimer(this), periodicTimer(this), networkTimer(this),
-    driveSerialPort("COM4"), drive(this),
-    networkData(this)
+    driveSerialPort("/dev/ttyACM1"), drive(this),
+    networkData(this),
+    frontCam(0)
 {
     //Start Drive Serial
     driveSerialPort.moveToThread(&driveSerialThread);
@@ -18,6 +19,7 @@ RobotMain::RobotMain(QObject *parent) : QObject(parent),
 
     connect(&server, SIGNAL(DataReceived(QByteArray)), &networkData, SLOT(ParseData(QByteArray)));
     connect(&server, SIGNAL(ConnectionLost()), &networkData, SLOT(ResetToDefaults()));
+    connect(&networkData, SIGNAL(SendData(QByteArray)), &server, SLOT(SendData(QByteArray)));
 
     //Connect Timers
     mainTimer.setInterval(5);
@@ -69,15 +71,25 @@ void RobotMain::MainLoop() {
 }
 
 void RobotMain::VisionLoop() {
-
+    frontCam.CaptureImage();
 }
 
 void RobotMain::PeriodicLoop() {
+    double currentTemp = TemperatureMonitor::GetTemperature();
 
+    //qDebug() << currentTemp;
+
+    if (currentTemp > TemperatureMonitor::CRITICAL_TEMP) {
+        qDebug() << "Shutdown!!!";
+        QCoreApplication::exit(1);
+    }
 }
 
 void RobotMain::NetworkLoop() {
-
+    if (frontCam.HasNewImage()) {
+        networkData.SetPicture(frontCam.GetCurrentImage());
+        networkData.SendDataToBase();
+    }
 }
 
 RobotMain::~RobotMain() {
