@@ -6,10 +6,15 @@
 #include <QTimer>
 #include <QThread>
 
+#include <QCoreApplication>
+
 #include "Serial/serialport.h"
 #include "Controls/robotdrive.h"
 
 #include "Network/networkserver.h"
+#include "Network/networkdatamanager.h"
+
+#include "Protocols/rest_network.h"
 
 class RobotMain : public QObject
 {
@@ -33,7 +38,7 @@ private:
 
     QThread networkThread;
     NetworkServer server;
-
+    NetworkDataManager networkData;
 
 private slots:
     void MainLoop();

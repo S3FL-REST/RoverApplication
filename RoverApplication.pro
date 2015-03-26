@@ -21,7 +21,8 @@ SOURCES += main.cpp \
     Serial/serialmanager.cpp \
     Controls/robotdrive.cpp \
     Protocols/rest_network.cpp \
-    Network/networkserver.cpp
+    Network/networkserver.cpp \
+    Network/networkdatamanager.cpp
 
 HEADERS += \
     Serial/serialport.h \
@@ -29,4 +30,5 @@ HEADERS += \
     Serial/serialmanager.h \
     Controls/robotdrive.h \
     Protocols/rest_network.h \
-    Network/networkserver.h
+    Network/networkserver.h \
+    Network/networkdatamanager.h

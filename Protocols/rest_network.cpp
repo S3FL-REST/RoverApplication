@@ -1,41 +1,45 @@
 #include "rest_network.h"
 
-rest_network::rest_network() : left_joystick(0), right_joystick(0), current_mode(STOP) {
+////////////////////////////////////////////////////////////////////////////////
+/// Network2Rover
+////////////////////////////////////////////////////////////////////////////////
+
+Network2Rover::Network2Rover() : left_joystick(0), right_joystick(0), current_mode(STOP) {
     //Empty Constructor
 }
 
-void rest_network::SetLeftJoystick(int lJoy) {
+void Network2Rover::SetLeftJoystick(int lJoy) {
     left_joystick = lJoy;
 }
 
-void rest_network::SetRightJoystick(int rJoy) {
+void Network2Rover::SetRightJoystick(int rJoy) {
     right_joystick = rJoy;
 }
 
-void rest_network::SetRunMode(run_mode newMode) {
+void Network2Rover::SetRunMode(run_mode newMode) {
     current_mode = newMode;
 }
 
-int rest_network::GetLeftJoystick() const {
+int Network2Rover::GetLeftJoystick() const {
     return left_joystick;
 }
 
-int rest_network::GetRightJoystick() const {
+int Network2Rover::GetRightJoystick() const {
     return right_joystick;
 }
 
-run_mode rest_network::GetRunMode() const {
+Network2Rover::run_mode Network2Rover::GetRunMode() const {
     return current_mode;
 }
 
-QByteArray rest_network::ToByteArray() const {
+QByteArray Network2Rover::ToByteArray() const {
     return QString("%1:%2:%3\n").arg(QString::number(left_joystick), QString::number(right_joystick), QString::number(static_cast<int>(current_mode))).toUtf8();
 }
 
-bool rest_network::ParseString(QString data) {
-    QStringList list = data.split(":");
+bool Network2Rover::ParseData(QByteArray data) {
+    QStringList list = QString(data).split(":");
 
-    if (list.size() < 3) return false;
+    if (list.size() < NUM_PARAMS) return false;
 
     left_joystick = list.at(0).toInt();
     right_joystick = list.at(1).toInt();
@@ -44,23 +48,27 @@ bool rest_network::ParseString(QString data) {
     return true;
 }
 
-rest_network_pic::rest_network_pic() : new_picture(false) {
+////////////////////////////////////////////////////////////////////////////////
+/// Network2Base
+////////////////////////////////////////////////////////////////////////////////
+
+Network2Base::Network2Base() : new_picture(false) {
 
 }
 
-void rest_network_pic::SetImage(QImage &image_in) {
+void Network2Base::SetImage(QImage &image_in) {
     image = image_in;
 }
 
-QImage rest_network_pic::GetImage() const {
+QImage Network2Base::GetImage() const {
     return image;
 }
 
-bool rest_network_pic::HasNewImage() const {
+bool Network2Base::HasNewImage() const {
     return new_picture;
 }
 
-QByteArray rest_network_pic::ToByteArray() const {
+QByteArray Network2Base::ToByteArray() const {
     QByteArray byteArray;
 
     QBuffer buffer(&byteArray);
@@ -73,7 +81,7 @@ QByteArray rest_network_pic::ToByteArray() const {
     return byteArray;
 }
 
-bool rest_network_pic::ParseString(QString data) {
+bool Network2Base::ParseString(QString data) {
     QByteArray byteArray = data.toUtf8();
 
     QBuffer buffer(&byteArray);

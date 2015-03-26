@@ -10,23 +10,25 @@
 #include <QBuffer>
 #include <QDataStream>
 
-enum run_mode {
-  STOP = 0,
-  TELEOP = 1,
-  SAFE_AUTON = 2,
-  FULL_AUTON = 3
-};
-
-enum linear_actuator {
-    L_FORWARD = 0,
-    L_STOP = 1,
-    L_REVERSE = 2
-};
-
-class rest_network
+class Network2Rover
 {
 public:
-    rest_network();
+    enum run_mode {
+      STOP = 0,
+      TELEOP = 1,
+      SAFE_AUTON = 2,
+      FULL_AUTON = 3
+    };
+
+    enum linear_actuator {
+        L_FORWARD = 0,
+        L_STOP = 1,
+        L_REVERSE = 2
+    };
+
+    Network2Rover();
+
+    static const int NUM_PARAMS = 3;
 
     void SetLeftJoystick(int);
     void SetRightJoystick(int);
@@ -37,7 +39,7 @@ public:
     run_mode GetRunMode() const;
 
     QByteArray ToByteArray() const;
-    bool ParseString(QString);
+    bool ParseData(QByteArray);
 
 private:
     int left_joystick;
@@ -45,10 +47,10 @@ private:
     run_mode current_mode;
 };
 
-class rest_network_pic
+class Network2Base
 {
 public:
-    rest_network_pic();
+    Network2Base();
 
     void SetImage(QImage&);
 
