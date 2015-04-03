@@ -25,7 +25,8 @@ SOURCES += main.cpp \
     Network/networkdatamanager.cpp \
     Computer/temperaturemonitor.cpp \
     Vision/camera.cpp \
-    Vision/robotvision.cpp
+    Vision/robotvision.cpp \
+    Controls/robotcollection.cpp
 
 HEADERS += \
     Serial/serialport.h \
@@ -37,7 +38,8 @@ HEADERS += \
     Network/networkdatamanager.h \
     Computer/temperaturemonitor.h \
     Vision/camera.h \
-    Vision/robotvision.h
+    Vision/robotvision.h \
+    Controls/robotcollection.h
 
 unix {
     CONFIG += link_pkgconfig

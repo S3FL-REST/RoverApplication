@@ -2,7 +2,8 @@
 
 RobotMain::RobotMain(QObject *parent) : QObject(parent),
     mainTimer(this), visionTimer(this), periodicTimer(this), networkTimer(this),
-    driveSerialPort("/dev/ttyACM0"), drive(this),
+    driveSerialPort("/dev/ttyACM1"), drive(this),
+    collectionSerialPort("/dev/ttyACM0"), collection(this),
     networkData(this),
     frontCam(0)
 {
@@ -12,6 +13,13 @@ RobotMain::RobotMain(QObject *parent) : QObject(parent),
 
     connect(&driveSerialPort, SIGNAL(DataAvailable(QByteArray)), &drive, SLOT(ReceiveData(QByteArray)));
     connect(&drive, SIGNAL(SendDataSig(QByteArray)), &driveSerialPort, SLOT(TransmitData(QByteArray)));
+
+    //Start CollectionSerial
+    collectionSerialPort.moveToThread(&collectionSerialThread);
+    collectionSerialThread.start();
+
+    connect(&collectionSerialPort, SIGNAL(DataAvailable(QByteArray)), &collection, SLOT(ReceiveData(QByteArray)));
+    connect(&collection, SIGNAL(SendDataSig(QByteArray)), &collectionSerialPort, SLOT(TransmitData(QByteArray)));
 
     //Start Network Thread
     server.moveToThread(&networkThread);
@@ -110,4 +118,3 @@ void RobotMain::NetworkLoop() {
 RobotMain::~RobotMain() {
 
 }
-

@@ -12,6 +12,7 @@
 
 #include "Serial/serialport.h"
 #include "Controls/robotdrive.h"
+#include "Controls/robotcollection.h"
 
 #include "Network/networkserver.h"
 #include "Network/networkdatamanager.h"
@@ -39,6 +40,10 @@ private:
     QThread driveSerialThread;
     SerialPort driveSerialPort;
     RobotDrive drive;
+
+    QThread collectionSerialThread;
+    SerialPort collectionSerialPort;
+    RobotCollection collection;
 
     QThread networkThread;
     NetworkServer server;

@@ -6,6 +6,10 @@ SerialPort::SerialPort(QString port_in, QObject *parent) : QObject(parent),
     Connect();
 }
 
+bool SerialPort::IsOpen() const {
+    return serialPort.isOpen();
+}
+
 void SerialPort::Connect() {
     serialPort.setPortName(port);
     serialPort.setBaudRate(QSerialPort::Baud9600);

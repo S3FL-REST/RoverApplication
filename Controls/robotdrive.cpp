@@ -11,14 +11,14 @@ void RobotDrive::ReceiveData(QByteArray data) {
 
 void RobotDrive::SetDriveMotors(int left, int right) {
     if (currentLeft != left || currentRight != right) {
-        QString dataOut = QString("d:%1:%2\n\r").arg(left).arg(right);
+        QString dataOut = QString("d:%1:%2\n").arg(left).arg(right);
 
         emit SendData(dataOut.toUtf8());
 
-        qDebug() << "Setting L:R to " << left << ":" << right;
-
         currentLeft = left;
         currentRight = right;
+
+        qDebug() << "Setting L:R to " << left << ":" << right;
     }
 }
 

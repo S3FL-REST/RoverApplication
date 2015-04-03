@@ -24,6 +24,7 @@ class SerialPort : public QObject
 
 public:
     explicit SerialPort(QString port_in, QObject *parent = 0);
+    bool IsOpen() const;
     ~SerialPort();
 
 private:
