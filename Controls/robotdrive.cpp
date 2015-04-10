@@ -1,8 +1,8 @@
 #include "robotdrive.h"
 
-RobotDrive::RobotDrive(QObject *parent) : SerialManager(parent), currentLeft(0), currentRight(0)
+RobotDrive::RobotDrive(QObject *parent) : SerialManager(parent), currentLeft(0), currentRight(0), currentSuspension(Network2Rover::L_STOP)
 {
-
+    //Empty Implementation
 }
 
 void RobotDrive::ReceiveData(QByteArray data) {
@@ -19,6 +19,17 @@ void RobotDrive::SetDriveMotors(int left, int right) {
         currentRight = right;
 
         qDebug() << "Setting L:R to " << left << ":" << right;
+    }
+}
+
+void RobotDrive::SetSuspension(Network2Rover::linear_actuator suspension) {
+    if (currentSuspension != suspension) {
+        QString dataOut = QString("s:%q\n").arg(static_cast<int>(suspension));
+        emit SendData(dataOut.toUtf8());
+
+        currentSuspension = suspension;
+
+        qDebug() << "Setting suspension to " << static_cast<int>(suspension);
     }
 }
 

@@ -14,8 +14,8 @@ class NetworkDataManager : public QObject
 public:
     explicit NetworkDataManager(QObject *parent = 0);
 
-    int GetJoystickLeft() const;
-    int GetJoystickRight() const;
+    const Network2Rover & GetProtocol() const;
+
     Network2Rover::run_mode GetCurrentRunMode() const;
 
     void SetPicture(QImage);

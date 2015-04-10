@@ -76,20 +76,28 @@ void RobotMain::MainLoop() {
     }
 
     else if (runMode == Network2Rover::TELEOP) {
-        int joyL = networkData.GetJoystickLeft();
-        int joyR = networkData.GetJoystickRight();
+        //Robot Drive
+        int joyL = networkData.GetProtocol().GetLeftJoystick();
+        int joyR = networkData.GetProtocol().GetRightJoystick();
+
+        Network2Rover::linear_actuator suspActuator = networkData.GetProtocol().GetSuspension();
 
         drive.SetDriveMotors(joyL, joyR);
+        drive.SetSuspension(suspActuator);
+
+        //Robot Collection
+        int rate = networkData.GetProtocol().GetArmRate();
+        Network2Rover::linear_actuator binActuator = networkData.GetProtocol().GetBinActuator();
+        Network2Rover::linear_actuator scoopActuator = networkData.GetProtocol().GetScoopActuator();
+
+        collection.SetRate(rate);
+        collection.SetBinActuator(binActuator);
+        collection.SetScoopActuator(scoopActuator);
     }
 
     else {
         drive.SetDriveMotors(0, 0);
     }
-}
-
-// Vision Loop - Runs once every 50 ms
-void RobotMain::VisionLoop() {
-    frontCam.CaptureImage();
 }
 
 // Periodic Loop - Runs once every 1000 ms
@@ -104,6 +112,11 @@ void RobotMain::PeriodicLoop() {
         qDebug() << "Shutdown!!!";
         QCoreApplication::exit(1);
     }
+}
+
+// Vision Loop - Runs once every 50 ms
+void RobotMain::VisionLoop() {
+    frontCam.CaptureImage();
 }
 
 // Network Loop - Runs once every 500 ms

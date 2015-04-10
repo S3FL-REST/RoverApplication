@@ -4,12 +4,8 @@ NetworkDataManager::NetworkDataManager(QObject *parent) : QObject(parent) {
 
 }
 
-int NetworkDataManager::GetJoystickLeft() const {
-    return dataIn.GetLeftJoystick();
-}
-
-int NetworkDataManager::GetJoystickRight() const {
-    return dataIn.GetRightJoystick();
+const Network2Rover & NetworkDataManager::GetProtocol() const {
+    return dataIn;
 }
 
 Network2Rover::run_mode NetworkDataManager::GetCurrentRunMode() const {
